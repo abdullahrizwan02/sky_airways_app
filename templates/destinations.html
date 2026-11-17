@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Destinations — Sky Airways{% endblock %}
+{% block content %}
+<section class="py-16 px-6 bg-gradient-to-b from-sky-50 to-white">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex flex-col md:flex-row justify-between gap-6 md:items-end">
+      <div><p class="section-eyebrow">Explore the world</p><h1 class="section-title mt-3">Featured destinations</h1></div>
+      <form><label class="label">Select country / currency</label><select name="currency" onchange="this.form.submit()" class="form-field w-64 mt-2">{% for c in currencies %}<option value="{{ c }}" {{ 'selected' if c == currency }}>{{ c }}</option>{% endfor %}</select></form>
+    </div>
+    <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-6 mt-10">
+      {% for d in destinations %}
+      <a href="{{ url_for('destination_detail', destination_id=d.id) }}" class="premium-card photo-card group">
+        <div class="destination-art" style="background-image:url('{{ d.image_url }}')"></div>
+        <div class="destination-card-body">
+          <p class="label">{{ d.country }}</p>
+          <h2 class="text-2xl font-extrabold mt-1 tracking-tight">{{ d.city }}</h2>
+          <p class="text-slate-600 mt-2 leading-relaxed">{{ d.description }}</p>
+          <p class="fare-text mt-4">From {{ currency }} {{ '%.0f'|format(d.base_fare * rate) }}</p>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

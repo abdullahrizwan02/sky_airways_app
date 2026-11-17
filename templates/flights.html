@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Available Flights — Sky Airways{% endblock %}
+{% block content %}
+<section class="bg-gradient-to-b from-sky-50 to-white py-16 px-6">
+  <div class="max-w-7xl mx-auto">
+    <p class="text-accent font-black uppercase tracking-[.25em] text-xs">Search results</p><h1 class="section-title mt-3">Available flights</h1>
+    <div class="grid lg:grid-cols-4 gap-7 mt-10">
+      <aside class="premium-card p-6 h-fit"><h3 class="font-black text-xl">Refine search</h3><form action="{{ url_for('flights') }}" class="space-y-4 mt-5"><select name="from" class="form-field">{% for a in airports %}<option {{ 'selected' if search.from in a }}>{{ a }}</option>{% endfor %}</select><select name="to" class="form-field">{% for a in airports %}<option {{ 'selected' if search.to in a }}>{{ a }}</option>{% endfor %}</select><select name="cabin" class="form-field"><option value="">Any cabin</option><option>Economy</option><option>Premium Economy</option><option>Business</option><option>First Class</option></select><button class="btn-dark w-full">Update</button></form></aside>
+      <div class="lg:col-span-3 space-y-5">
+      {% for f in flights %}
+        <div class="premium-card p-6 grid md:grid-cols-[1fr_auto] gap-6 items-center">
+          <div><div class="flex flex-wrap gap-3 items-center"><span class="px-3 py-1 rounded-full bg-sky-100 text-sky-700 text-xs font-black">{{ f.flight_number }}</span><span class="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-bold">{{ f.status }}</span><span class="text-sm text-slate-500">{{ f.aircraft_type }}</span></div>
+            <div class="mt-5 grid sm:grid-cols-[1fr_auto_1fr] gap-4 items-center"><div><p class="label">Departure</p><h3 class="text-2xl font-black">{{ f.departure_city }}</h3><p class="text-slate-500">{{ f.departure_airport }}</p><p class="font-bold mt-1">{{ f.departure_time }}</p></div><div class="text-center"><p class="text-slate-400 text-sm">{{ f.duration }}</p><div class="w-32 h-px bg-slate-300 my-2 relative"><span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-white px-2">✈</span></div><p class="text-xs font-bold text-slate-500">Non-stop</p></div><div><p class="label">Arrival</p><h3 class="text-2xl font-black">{{ f.arrival_city }}</h3><p class="text-slate-500">{{ f.arrival_airport }}</p><p class="font-bold mt-1">{{ f.arrival_time }}</p></div></div>
+          </div>
+          <div class="md:text-right"><p class="text-sm text-slate-500 font-bold">{{ f.cabin_class }}</p><p class="text-3xl font-black text-accent mt-1">PKR {{ '%.0f'|format(f.fare) }}</p><p class="text-sm text-slate-500 mb-4">{{ f.available_seats }} seats left</p><a class="btn-primary w-full" href="{{ url_for('select_flight', flight_id=f.id) }}">Select Flight</a></div>
+        </div>
+      {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

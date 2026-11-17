@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}{{ dest.city }} — Sky Airways{% endblock %}
+{% block content %}
+<section class="px-6 py-12 bg-white">
+  <div class="max-w-7xl mx-auto">
+    <div class="rounded-[4px] overflow-hidden min-h-[460px] relative p-8 lg:p-12 flex items-end bg-cover bg-center" style="background-image:url('{{ dest.image_url }}')">
+      <div class="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-950/25 to-transparent"></div>
+      <div class="relative z-10 text-white">
+        <p class="font-extrabold uppercase tracking-[.25em] text-xs">{{ dest.country }}</p>
+        <h1 class="text-5xl lg:text-7xl font-extrabold tracking-[-.06em] mt-2">{{ dest.city }}</h1>
+        <p class="text-lg max-w-2xl mt-4 text-slate-100 leading-relaxed">{{ dest.description }}</p>
+      </div>
+    </div>
+    <div class="grid lg:grid-cols-[1fr_360px] gap-8 mt-10">
+      <div>
+        <h2 class="text-3xl font-extrabold tracking-tight">Famous places</h2>
+        <div class="grid md:grid-cols-3 gap-5 mt-6">
+          {% for p in places %}
+          <div class="premium-card p-5">
+            <div class="h-32 rounded-[4px] bg-cover bg-center" style="background-image:url('{{ dest.image_url }}')"></div>
+            <h3 class="font-extrabold text-xl mt-5">{{ p }}</h3>
+            <p class="text-slate-600 mt-2 leading-relaxed">A must-see landmark for travelers visiting {{ dest.city }}.</p>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="premium-card p-7 mt-8"><h3 class="text-2xl font-extrabold">Travel tips</h3><p class="text-slate-600 mt-3 leading-relaxed">Plan early, check visa requirements, and keep enough time for airport check-in. The best time to visit {{ dest.city }} is during comfortable weather seasons and major cultural events.</p></div>
+      </div>
+      <aside class="premium-card p-7 h-fit">
+        <p class="label">Starting fare</p>
+        <p class="text-4xl font-extrabold text-accent mt-2">PKR {{ '%.0f'|format(dest.base_fare) }}</p>
+        <form action="{{ url_for('flights') }}" class="space-y-4 mt-6"><select name="from" class="form-field">{% for a in airports %}<option>{{ a }}</option>{% endfor %}</select><input name="to" class="form-field" value="{{ dest.city }}"><input type="date" name="date" class="form-field"><button class="btn-primary w-full">Search flights</button></form>
+      </aside>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,5 @@
+{% extends 'base.html' %}
+{% block title %}Feedback — Sky Airways{% endblock %}
+{% block content %}
+<section class="py-16 px-6 bg-slate-50"><div class="max-w-3xl mx-auto"><p class="text-accent font-black uppercase tracking-[.25em] text-xs">Your voice matters</p><h1 class="section-title mt-3">Submit feedback</h1><form method="post" class="premium-card p-7 mt-8 space-y-5"><div><label class="label">Booking</label><select class="form-field" name="booking_id">{% for b in bookings %}<option value="{{ b.id }}">{{ b.booking_reference }} · {{ b.booking_status }}</option>{% endfor %}</select></div><div><label class="label">Rating</label><select class="form-field" name="rating"><option value="5">★★★★★ Excellent</option><option value="4">★★★★ Good</option><option value="3">★★★ Average</option><option value="2">★★ Needs improvement</option><option value="1">★ Poor</option></select></div><div><label class="label">Message</label><textarea class="form-field min-h-36" name="message" placeholder="Tell us about your Sky Airways experience." required></textarea></div><button class="btn-primary w-full">Submit feedback</button></form></div></section>
+{% endblock %}

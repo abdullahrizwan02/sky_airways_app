@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% block title %}Sky Airways — Where Travel Meets Technology{% endblock %}
+{% block content %}
+<section class="hero-sky hero-video-section px-4 sm:px-6 lg:px-8">
+  <video class="hero-bg-video" autoplay muted loop playsinline preload="auto">
+    <source src="{{ url_for('static', filename='video/sky-hero.mp4') }}" type="video/mp4">
+  </video>
+
+  <div class="hero-video-overlay"></div>
+
+  <div class="max-w-7xl mx-auto relative z-10 pt-20 lg:pt-24 pb-12">
+    <div class="max-w-xl hero-copy">
+      <p class="hero-kicker">Sky Airways</p>
+      <h1 class="hero-title">WHERE<br>DO YOU WANT TO<br><span class="font-black">EXPLORE</span></h1>
+      <p class="hero-subtitle">Fly beyond boundaries with a smarter, faster and more elegant airline booking experience.</p>
+    </div>
+
+    <div id="booking-panel" class="booking-glass home-booking overflow-hidden">
+  <div class="booking-tabs grid md:grid-cols-4">
+        <button class="tab-btn active-tab" data-tab-target="search">✈ Search flights</button>
+        <button class="tab-btn" data-tab-target="manage">◆ Manage booking / Check in</button>
+        <button class="tab-btn" data-tab-target="whats">◢ What's on your flight</button>
+        <button class="tab-btn" data-tab-target="status">◷ Flight status</button>
+      </div>
+      <div class="p-5 lg:p-7 booking-form-area">
+        <div data-tab="search">
+          <form action="{{ url_for('flights') }}" class="space-y-5">
+            <div class="flex flex-wrap gap-2 text-[11px] font-extrabold uppercase tracking-wider text-slate-600">
+              <label class="px-4 py-2 bg-white border border-slate-200"><input type="radio" name="trip" checked class="mr-2 accent-red-600">Round trip</label>
+              <label class="px-4 py-2 bg-white/70 border border-slate-200"><input type="radio" name="trip" class="mr-2 accent-red-600">One way</label>
+              <label class="px-4 py-2 bg-white/70 border border-slate-200"><input type="radio" name="trip" class="mr-2 accent-red-600">Multi city</label>
+            </div>
+            <div class="grid lg:grid-cols-[1.35fr_1.35fr_1fr_1fr_70px] gap-3">
+              <div><label class="label">Where?</label><select name="from" class="form-field">{% for a in airports %}<option>{{ a }}</option>{% endfor %}</select></div>
+              <div><label class="label">To</label><select name="to" class="form-field">{% for a in airports[3:] %}<option>{{ a }}</option>{% endfor %}</select></div>
+              <div><label class="label">Date</label><input type="date" name="date" class="form-field"></div>
+              <div><label class="label">Cabin</label><select name="cabin" class="form-field"><option>Economy</option><option>Premium Economy</option><option>Business</option><option>First Class</option></select></div>
+              <button class="btn-primary self-end !px-0 !h-[54px]" aria-label="Search flights">→</button>
+            </div>
+            <div class="flex flex-wrap gap-3 pt-1">
+              <a href="{{ url_for('manage_booking') }}" class="quick-link">✓ Check-in</a>
+              <a href="{{ url_for('status') }}" class="quick-link">◷ Flight Status</a>
+              <a href="{{ url_for('help_page') }}" class="quick-link">▣ Baggage Info</a>
+            </div>
+          </form>
+        </div>
+        <div data-tab="manage" class="hidden">
+          <form action="{{ url_for('manage_booking') }}" method="post" class="grid md:grid-cols-[1fr_1fr_180px] gap-3"><div><label class="label">Booking reference</label><input class="form-field" name="booking_reference" placeholder="SKY8K29QF"></div><div><label class="label">Last name</label><input class="form-field" name="last_name" placeholder="Passenger last name"></div><button class="btn-primary self-end">Find Booking</button></form>
+        </div>
+        <div data-tab="whats" class="hidden">
+          <form action="{{ url_for('whats_on') }}" method="post" class="space-y-4"><div class="flex gap-5 font-bold text-sm"><label><input type="radio" checked name="mode" class="accent-red-600"> Route</label><label><input type="radio" name="mode" class="accent-red-600"> Flight number</label></div><div class="grid md:grid-cols-[1fr_1fr_1fr_180px] gap-3"><select name="departure_airport" class="form-field">{% for a in airports %}<option>{{ a }}</option>{% endfor %}</select><select name="arrival_airport" class="form-field">{% for a in airports[3:] %}<option>{{ a }}</option>{% endfor %}</select><input type="text" name="flight_number" class="form-field" placeholder="Optional flight number"><button class="btn-primary">See details</button></div></form>
+        </div>
+        <div data-tab="status" class="hidden">
+          <form action="{{ url_for('status') }}" method="post" class="grid md:grid-cols-[1fr_1fr_1fr_180px] gap-3"><select name="departure_airport" class="form-field">{% for a in airports %}<option>{{ a }}</option>{% endfor %}</select><select name="arrival_airport" class="form-field">{% for a in airports[3:] %}<option>{{ a }}</option>{% endfor %}</select><input name="flight_number" class="form-field" placeholder="Or flight number"><button class="btn-primary">Check status</button></form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bg-white py-18 lg:py-20 px-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+      <div><p class="section-eyebrow">Featured destinations</p><h2 class="section-title mt-3">Beautiful fares,<br>brilliant places.</h2></div>
+      <a href="{{ url_for('destinations') }}" class="btn-dark">Explore all destinations</a>
+    </div>
+    <div class="grid md:grid-cols-3 gap-7">
+      {% for d in destinations %}
+      <a href="{{ url_for('destination_detail', destination_id=d.id) }}" class="premium-card photo-card group">
+        <div class="destination-art" style="background-image:url('{{ d.image_url }}')"></div>
+        <div class="destination-card-body">
+          <p class="text-sm text-slate-500 font-bold">{{ d.country }}</p>
+          <h3 class="text-2xl font-extrabold mt-1 tracking-tight">{{ d.city }}</h3>
+          <p class="text-slate-600 mt-2 leading-relaxed">{{ d.description }}</p>
+          <div class="mt-5 flex items-center justify-between"><span class="fare-text">From PKR {{ '%.0f'|format(d.base_fare) }}</span><span class="font-bold text-slate-900">Book now →</span></div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="py-20 px-6 bg-[#f6f8fb]">
+  <div class="max-w-7xl mx-auto grid lg:grid-cols-[.95fr_1.05fr] gap-12 items-center">
+    <div>
+      <p class="section-eyebrow">The Sky experience</p>
+      <h2 class="section-title mt-3">A cleaner way to fly, manage, and arrive prepared.</h2>
+      <p class="section-lead mt-6">Sky Airways brings the core airline journey into one polished database system: search, select a flight, choose a real seat, simulate payment, manage bookings, cancel tickets, and share feedback.</p>
+    </div>
+    <div class="grid sm:grid-cols-2 gap-5">
+      {% for f in facilities %}
+      <div class="premium-card p-6">
+        <p class="text-[11px] text-red-600 font-extrabold uppercase tracking-[.2em]">Experience</p>
+        <h3 class="font-extrabold text-xl mt-3">{{ f[0] }}</h3>
+        <p class="text-slate-600 mt-2 leading-relaxed">{{ f[1] }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

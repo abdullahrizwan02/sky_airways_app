@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'Create account' if mode == 'signup' else 'Login' }} — Sky Airways{% endblock %}
+{% block content %}
+<section class="hero-sky min-h-screen px-6 py-16 flex items-center">
+  <div class="plane-wrap opacity-30"><div class="wing-back"></div><div class="wing-main"></div><div class="plane-body"></div><div class="plane-tail"></div><div class="engine"></div></div>
+  <div class="max-w-5xl mx-auto w-full grid lg:grid-cols-2 gap-10 items-center relative z-10">
+    <div><p class="text-accent font-black uppercase tracking-[.25em] text-xs">Sky Airways Account</p><h1 class="section-title mt-4">Continue your journey securely.</h1><p class="mt-5 text-lg text-slate-600">Browse freely. Login is only needed when you book, select a seat, pay, manage bookings, or submit feedback.</p></div>
+    <div class="booking-glass rounded-3xl p-7 lg:p-9">
+      <div class="flex gap-3 mb-8"><a class="{{ 'btn-primary' if mode == 'login' else 'btn-dark' }}" href="{{ url_for('login') }}">Login</a><a class="{{ 'btn-primary' if mode == 'signup' else 'btn-dark' }}" href="{{ url_for('signup') }}">Sign Up</a></div>
+      {% if mode == 'login' %}
+      <form method="post" class="space-y-5">
+        <div><label class="label">Email or username</label><input class="form-field" name="identity" required></div>
+        <div><label class="label">Password</label><input class="form-field" name="password" type="password" required></div>
+        <button class="btn-primary w-full">Login</button>
+        <p class="text-sm text-slate-500">Demo user: demo / demo123 · Admin: admin / admin123</p>
+      </form>
+      {% else %}
+      <form method="post" class="grid sm:grid-cols-2 gap-4">
+        <div class="sm:col-span-2"><label class="label">Full name</label><input class="form-field" name="full_name" required></div>
+        <div><label class="label">Email</label><input class="form-field" name="email" type="email" required></div>
+        <div><label class="label">Username</label><input class="form-field" name="username" required></div>
+        <div><label class="label">Phone</label><input class="form-field" name="phone"></div>
+        <div><label class="label">Country</label><input class="form-field" name="country" placeholder="Pakistan"></div>
+        <div><label class="label">Date of birth</label><input class="form-field" type="date" name="date_of_birth"></div>
+        <div><label class="label">Gender</label><select class="form-field" name="gender"><option>Female</option><option>Male</option><option>Other</option><option>Prefer not to say</option></select></div>
+        <div><label class="label">Password</label><input class="form-field" name="password" type="password" required></div>
+        <div><label class="label">Confirm password</label><input class="form-field" name="confirm_password" type="password" required></div>
+        <label class="sm:col-span-2 text-sm text-slate-600"><input type="checkbox" required> I agree to Sky Airways booking terms.</label>
+        <button class="btn-primary sm:col-span-2">Create Sky account</button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Sky Airways{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { skybrand: '#0F172A', accent: '#E11D2E', glow: '#22D3EE' },
+          fontFamily: { display: ['Inter', 'ui-sans-serif', 'system-ui'] }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+</head>
+<body class="font-display bg-slate-50 text-slate-900 min-h-screen">
+  <nav class="site-nav fixed top-0 left-0 right-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[64px] flex items-center justify-between">
+      <a href="{{ url_for('home') }}" class="flex items-center gap-3 group">
+        <span class="logo-mark group-hover:scale-105 transition"></span>
+        <span class="brand-text">SKY AIRWAYS</span>
+      </a>
+      <div class="hidden md:flex items-center gap-10">
+        <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+        <a class="nav-link" href="{{ url_for('book') }}">Book</a>
+        <a class="nav-link" href="{{ url_for('loyalty') }}">Loyalty</a>
+        <a class="nav-link" href="{{ url_for('help_page') }}">Help</a>
+        {% if user and user.role == 'admin' %}<a class="nav-link" href="{{ url_for('admin_dashboard') }}">Admin</a>{% endif %}
+      </div>
+      <div class="flex items-center gap-3">
+        {% if user %}
+        <div class="relative group">
+          <button class="flex items-center gap-3 rounded-full bg-white/80 border border-slate-200 px-3 py-2 shadow-sm hover:shadow-md transition">
+            <span class="h-9 w-9 rounded-full bg-skybrand text-white grid place-items-center font-bold">{{ user.full_name[0] }}</span>
+            <span class="hidden sm:block text-sm font-bold">{{ user.full_name.split()[0] }}</span>
+          </button>
+          <div class="absolute right-0 hidden group-hover:block pt-3 w-64">
+            <div class="bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden p-2">
+              <a class="dropdown-link" href="{{ url_for('booking_history') }}">My Bookings</a>
+              <a class="dropdown-link" href="{{ url_for('loyalty') }}">Loyalty Dashboard</a>
+              <a class="dropdown-link" href="{{ url_for('feedback') }}">Feedback</a>
+              <a class="dropdown-link text-red-600" href="{{ url_for('logout') }}">Logout</a>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <a href="{{ url_for('login') }}" class="hidden sm:inline-flex rounded-[3px] bg-skybrand text-white px-5 py-2.5 text-[11px] font-black tracking-widest uppercase hover:bg-accent transition shadow-md">Login / Sign Up</a>
+        {% endif %}
+        <button id="menuBtn" class="md:hidden h-11 w-11 rounded-xl bg-white shadow grid place-items-center">☰</button>
+      </div>
+    </div>
+    <div id="mobileMenu" class="hidden md:hidden bg-white border-t border-slate-100 px-5 py-4 space-y-3 font-bold uppercase tracking-widest text-xs">
+      <a href="{{ url_for('home') }}" class="block">Home</a>
+      <a href="{{ url_for('book') }}" class="block">Book</a>
+      <a href="{{ url_for('loyalty') }}" class="block">Loyalty</a>
+      <a href="{{ url_for('help_page') }}" class="block">Help</a>
+      {% if not user %}<a href="{{ url_for('login') }}" class="block text-accent">Login / Sign Up</a>{% endif %}
+    </div>
+  </nav>
+
+  <main class="pt-[64px]">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="fixed top-24 right-4 z-[60] space-y-2 max-w-sm">
+        {% for category, message in messages %}
+          <div class="rounded-2xl px-5 py-4 shadow-2xl border {{ 'bg-red-50 border-red-200 text-red-700' if category == 'error' else 'bg-white border-sky-100 text-slate-700' }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="bg-[#2e2e2e] text-slate-200 mt-20">
+    <div class="max-w-7xl mx-auto px-6 py-14 grid md:grid-cols-4 gap-10 border-b border-white/10">
+      <div><h3 class="footer-title">Before you fly</h3><p class="footer-link">Baggage</p><p class="footer-link">Visa and passport information</p><p class="footer-link">Travel information</p><p class="footer-link">Rules and notices</p></div>
+      <div><h3 class="footer-title">Where we fly</h3><p class="footer-link">Route map</p><p class="footer-link">Asia and Pacific</p><p class="footer-link">Europe</p><p class="footer-link">The Americas</p></div>
+      <div><h3 class="footer-title">Experience</h3><p class="footer-link">Cabin features</p><p class="footer-link">What's on your flight</p><p class="footer-link">Dining</p><p class="footer-link">Our lounges</p></div>
+      <div><h3 class="footer-title">Loyalty</h3><p class="footer-link">SkyMiles login</p><p class="footer-link">Join SkyMiles</p><p class="footer-link">Business rewards</p><p class="footer-link">Programme updates</p></div>
+    </div>
+    <div class="max-w-7xl mx-auto px-6 py-10 grid md:grid-cols-3 gap-8">
+      <div><h3 class="footer-title">Subscribe to offers</h3><div class="mt-4 flex"><input class="px-4 py-3 rounded-l-lg text-slate-900 w-full" placeholder="Email address"><button class="px-5 bg-accent rounded-r-lg font-bold">Subscribe</button></div></div>
+      <div><h3 class="footer-title">Sky Airways App</h3><p class="text-slate-400 mt-3">Book and manage your flights on the go.</p><div class="mt-4 flex gap-2"><span class="app-badge">App Store</span><span class="app-badge">Google Play</span></div></div>
+      <div><h3 class="footer-title">Connect with us</h3><div class="mt-4 flex gap-3"><span class="social">f</span><span class="social">𝕏</span><span class="social">in</span><span class="social">▶</span><span class="social">◎</span></div></div>
+    </div>
+    <p class="text-center text-slate-500 text-sm pb-8">© {{ now.year }} Sky Airways. Database course airline management system.</p>
+  </footer>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
